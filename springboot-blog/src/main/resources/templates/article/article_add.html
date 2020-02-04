@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>写文章 -博客管理系统</title>
+<link rel="stylesheet" type="text/css" href="/admin/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="/admin/css/style.css">
+<link rel="stylesheet" type="text/css" href="/admin/css/font-awesome.min.css">
+<link rel="apple-touch-icon-precomposed" href="/admin/images/icon/icon.png">
+<link rel="shortcut icon" href="/admin/images/icon/favicon.ico">
+<script src="/admin/js/jquery-2.1.4.min.js"></script>
+  <script src="/admin/js/jquery.form.js"></script>
+  <script src="/ckeditor/ckeditor.js"></script>
+</head>
+
+<body class="user-select" style="margin: 0px;padding: 0px;">
+     	<div>
+      		<ul class="breadcrumb" style="margin: 0px;">
+      			<li>文章管理</li>
+      			<li>文章添加</li>
+      		</ul>
+      	</div>
+      	<br/>
+ <div class="row">
+     <div align="center" style="color: red" th:text="${mess}"></div>
+        <form action="/back/article/add" method="post" class="add-article-form" id="f1">
+        
+          <div class="col-md-9">
+          
+            <div class="form-group">
+              <label for="article-title" class="sr-only">标题</label>
+              <input type="text" id="article-title" th:name="articleTitle" class="form-control" placeholder="在此处输入标题" required autofocus autocomplete="off">
+            </div>
+              <label for="article-content" class="sr-only">内容</label>
+           	<textarea th:name="articleContent"  class="ckeditor" style="height: 350px;"></textarea>
+              <div class="form-group">
+            </div>
+     
+          </div>
+          <div class="col-md-3">
+
+            <div class="add-article-box">
+              <h2 class="add-article-box-title"><span>栏目</span> </h2>
+
+              <div class="add-article-box-content"  style="overflow-y:auto;height:200px;width: 300px">
+                <ul class="category-list" th:each="cate:${cateList}">
+                  <li>
+                      <label>
+                      <input th:name="categoryId" type="radio" th:value="${cate.getCategoryId()}" checked>
+                      <th:block  th:text="${cate.getCategoryName()}"></th:block><em class="hidden-md">( 栏目ID: <span  th:text="${cate.getCategoryId()}"></span> )</em></label>
+                  </li>
+                </ul>
+              </div>
+            </div>
+    
+            <div class="add-article-box">
+              <h2 class="add-article-box-title"><span>标题图片</span></h2>
+              <div class="add-article-box-content">
+                      <input type="file" class="form-control" placeholder="点击按钮选择图片" id="upload" name="upload" autocomplete="off" onchange="uploadImg()">
+                      <!--<input type="file" th:name="articleImg" th:enctype="multipart" placeholder="点击按钮选择图片" class="form-control">-->
+                      <img th:src="${ww} " width="338" height="100" id="fileimg"/>
+                      <input type="hidden" th:name="articleImg" id="articleImg" />
+              </div>
+            
+            </div>
+            <div class="add-article-box">
+              <h2 class="add-article-box-title"><span>发布</span></h2>
+              <div class="add-article-box-content">
+              	<p><label>站长推荐：</label><input type="radio" th:name="articleRecom" th:value="1" checked/>是 <input type="radio" th:name="articleRecom" th:value="0" />否</p>
+                <p><label>是否发布：</label><input type="radio" th:name="articleMark" th:value="1" checked/>是 <input type="radio" th:name="articleMark" th:value="0" />否</p>
+                <p><label>当前时间：</label><label id="timeShow" class="time1"></label></p>
+              </div>
+              <div class="add-article-box-footer">
+                <button class="btn btn-primary" type="submit" name="submit">发布</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+   
+	<script src="/admin/js/bootstrap.min.js"></script> 
+	<script src="/admin/js/admin-scripts.js"></script>
+<script type="text/javascript">
+  function uploadImg() {
+    var options = {
+      url:'/back/article/upload',
+      type:'post',
+      success:function (data) {
+               /* 回显图片*/
+              $("#fileimg").attr2("src",data);
+              $("#articleImg").val(data);
+
+      }
+    }
+    $("#f1").ajaxSubmit(options);
+
+  }
+
+
+
+  var t = null;
+
+  t = setTimeout(time,1000);//开始执行
+
+  function time()
+
+  {
+
+    clearTimeout(t);//清除定时器
+
+    dt = new Date();
+
+    var y=dt.getYear()+1900;
+
+    var mm=dt.getMonth()+1;
+
+    var d=dt.getDate();
+
+    var weekday=["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
+
+    var day=dt.getDay();
+
+    var h=dt.getHours();
+
+    var m=dt.getMinutes();
+
+    var s=dt.getSeconds();
+
+    if(h<10){h="0"+h;}
+
+    if(m<10){m="0"+m;}
+
+    if(s<10){s="0"+s;}
+    绑定一个标签来显示
+    document.getElementById("timeShow").innerHTML = +y+"/"+mm+"/"+d+"/"+weekday[day]+""+h+":"+m+":"+s+"";
+
+    t = setTimeout(time,1000); //设定定时器，循环执行
+
+  }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+<title>学而不厌</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="/admin/css/bootstrap.min.css">
+<link href="/front/css/base.css" rel="stylesheet">
+<link href="/front/css/index.css" rel="stylesheet">
+  <script src="/admin/js/jquery-2.1.4.min.js"></script>
+  <script th:src="@{/layer/layer.js}"></script>
+</head>
+<script th:inline="javascript">
+  function ff()
+  {
+
+    document.getElementById(ss).style.backgroundColor="red"
+    document.getElementById(ss).style.color="red"
+  }
+</script>
+<body>
+
+<header>
+  <nav>
+    <ul>
+      <li class="obj"><a href="/index">网站首页</a></li>
+      <li th:each="cate:${cateList}" class="obj" >
+        <a th:href="@{'/'+${cate.categoryAlias}+'/'+${cate.categoryId}}" th:text="${cate.categoryName}"></a>
+      </li>
+      <li class="obj"><a href="/front/message" onclick="f1()">留言</a></li>
+    </ul>
+  </nav>
+</header>
+<article>
+  <div class="pics">
+    <ul>
+      <li><img src="/front/picture/42d76eafa6495d9647a4fd245201f56c.jpg"></li>
+      <li><img src="/front/picture/c9668d65657bc41b77f6834984538979.jpg"></li>
+      <li><img src="/front/picture/13ec5c876bf437fd7e9e6b12b565a69c.jpg"></li>
+    </ul>
+  </div>
+  <div class="sleftbox">
+    <div class="newblogs">
+      <h2 class="hometitle">最新文章</h2>
+      <ul>
+
+        <li th:each="article:${newArticle}">
+          <h3 class="blogtitle">
+            <th:block th:if="${#strings.length(article.articleTitle)} > 30">
+              <a th:href="@{'/listView/'+${article.articleId}}" target="_blank" th:text="${#strings.substring(article.articleTitle,0,30)}"></a>...
+            </th:block>
+            <th:block th:if="${#strings.length(article.articleTitle)} <30">
+              <a th:text="${article.articleTitle}"  th:href="@{'/listView/'+${article.articleId}}" target="_blank"></a>
+            </th:block>
+          </h3>
+          <div class="bloginfo">
+            <span class="blogpic">
+              <a th:href="@{'/listView/'+${article.articleId}}" title="别让这些闹心的套路，毁了你的网页设计">
+                <img th:src="${article.articleImg}" alt="别让这些闹心的套路，毁了你的网页设计" />
+              </a>
+            </span>
+            <th:block th:if="${#strings.length(article.articleContent)} > 130">
+              <p th:utext="${#strings.substring(article.articleContent,0,130)}"></p>...
+            </th:block>
+            <th:block th:if="${#strings.length(article.articleContent)} < 130">
+             <div th:utext="${article.articleContent}"></div>
+            </th:block>
+
+          </div>
+          <div class="autor">
+            <span class="lm f_l">
+              <a th:href="@{'/'+${article.categoryAlias}+'/'+${article.categoryId}}" title="css3" target="_blank"  class="classname" th:text="${article.categoryName}">css3</a>
+            </span>
+            <span class="dtime f_l" th:text="${#dates.format(article.articleTime,'yyyy-MM-dd')}">时间</span>
+            <span class="au01" th:text="${article.userName}">作者</span>
+            <span class="f_r">
+              <a th:href="@{'/listView/'+${article.articleId}}" class="more">阅读原文>></a>
+            </span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="srightbox">
+    <div class="aboutme">
+      <h2 class="ab_title">关于我</h2>
+      <div class="avatar"><img src="/front/picture/xm.jpg" /></div>
+      <div class="ab_con">
+        <p>网名：求介绍富婆</p>
+        <p>职业：Java </p>
+      </div>
+    </div>
+    <div class="search">
+      <form action="/search" method="post" name="searchform" id="searchform">
+        <input name="name" id="keyboard" class="input_text" value="请输入关键字" style="color: rgb(153, 153, 153);" onfocus="if(value=='请输入关键字'){this.style.color='#000';value=''}" onblur="if(value==''){this.style.color='#999';value='请输入关键字'}" type="text">
+        <input name="Submit" class="input_submit" value="搜索" type="submit">
+      </form>
+    </div>
+    <div class="paihang">
+      <h2 class="ab_title">站长推荐</h2>
+      <ul>
+
+        <li th:each="article:${articleRecom}">
+          <h3 class="blogtitle"  >
+            <th:block th:if="${#strings.length(article.articleTitle)} > 10">
+              <a th:href="@{'/listView/'+${article.articleId}}" target="_blank" th:text="${#strings.substring(article.articleTitle,0,10)}"></a>...
+            </th:block>
+            <th:block th:if="${#strings.length(article.articleTitle)} <10">
+              <a th:text="${article.articleTitle}"  th:href="@{'/listView/'+${article.articleId}}" target="_blank"></a>
+            </th:block>
+          </h3>
+          <div class="bloginfo">
+            <th:block th:if="${#strings.length(article.articleContent)} > 50">
+              <p th:utext="${#strings.substring(article.articleContent,0,65)}"></p>...
+            </th:block>
+            <th:block th:if="${#strings.length(article.articleContent)} < 50">
+              <p th:utext="${article.articleContent}"></p>
+            </th:block>
+          </div>
+          <div class="autor">
+            <span class="lm f_l">
+              <a th:href="@{'/'+${article.categoryAlias}+'/'+${article.categoryId}}" title="css3" target="_blank"  class="classname" th:text="${article.categoryName}">css3</a>
+            </span>
+            <span class="au01" th:text="${article.userName}">作者</span>
+            <span class="dtime f_l" th:text="${#dates.format(article.articleTime,'yyyy-MM-dd')}">2018-03-25</span>
+          </div>
+        </li>
+      </ul>
+      <div class="ad"><img src="/front/picture/ad300x100.jpg"></div>
+    </div>
+
+
+  </div>
+</article>
+<footer>
+  <p>Design by wuzixuan<a href="http://www.XXX.com">个人博客</a> <a href="/">渝ICP备</a></p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!doctype html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>学无止境</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="/admin/css/bootstrap.min.css">
+<link href="/front/css/base.css" rel="stylesheet">
+<link href="/front/css/index.css" rel="stylesheet">
+  <script src="/admin/js/jquery-2.1.4.min.js"></script>
+  <script th:src="@{/layer/layer.js}"></script>
+</head>
+<body>
+
+<header>
+  <nav>
+    <ul>
+      <li class="obj"><a href="/index">网站首页</a></li>
+      <li th:each="cate:${cateList}" class="obj" >
+        <a th:href="@{'/'+${cate.categoryAlias}+'/'+${cate.categoryId}}" th:text="${cate.categoryName}">网站首页</a>
+      </li>
+
+      <li class="obj"><a href="/front/message" onclick="f1()">留言</a></li>
+    </ul>
+  </nav>
+</header>
+<article>
+  <script>
+    layer.confirm('这栏目下暂时还没有文章哦~~，先去其他栏目看看吧~~',{
+      btn:['确定'],
+      icon:1
+    },function () {
+      location.href="/index"
+    });
+  </script>
+
+</article>
+
+</body>
+</html>
+
+

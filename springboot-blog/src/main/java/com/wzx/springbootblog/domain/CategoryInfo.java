@@ -1,0 +1,66 @@
+package com.wzx.springbootblog.domain;
+
+import java.io.Serializable;
+
+public class CategoryInfo implements Serializable {
+    private Integer categoryId;
+
+    private String categoryName;
+
+    private String categoryAlias;
+
+    private String categoryDesc;
+
+    private Integer articalNum;
+
+    public Integer getArticalNum() {
+        return articalNum;
+    }
+
+    public void setArticalNum(Integer articalNum) {
+        this.articalNum = articalNum;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName == null ? null : categoryName.trim();
+    }
+
+    public String getCategoryAlias() {
+        return categoryAlias;
+    }
+
+    public void setCategoryAlias(String categoryAlias) {
+        this.categoryAlias = categoryAlias == null ? null : categoryAlias.trim();
+    }
+
+    public String getCategoryDesc() {
+        return categoryDesc;
+    }
+
+    @Override
+    public String toString() {
+        return "CategoryInfo{" +
+                "categoryId=" + categoryId +
+                ", categoryName='" + categoryName + '\'' +
+                ", categoryAlias='" + categoryAlias + '\'' +
+                ", categoryDesc='" + categoryDesc + '\'' +
+                ", articalNum=" + articalNum +
+                '}';
+    }
+
+    public void setCategoryDesc(String categoryDesc) {
+        this.categoryDesc = categoryDesc == null ? null : categoryDesc.trim();
+    }
+}

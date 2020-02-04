@@ -1,0 +1,97 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>学海无涯</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="/front/css/base.css" rel="stylesheet">
+<link href="/front/css/index.css" rel="stylesheet">
+
+</head>
+<body>
+
+<header>
+
+  <nav>
+    <ul>
+      <li class="obj"><a href="/index">网站首页</a></li>
+      <li th:each="cate:${cateList}" class="obj" >
+        <a th:href="@{'/'+${cate.categoryAlias}+'/'+${cate.categoryId}}" th:text="${cate.categoryName}">网站首页</a>
+      </li>
+      <li class="obj"><a href="/front/message" onclick="f1()">留言</a></li>
+    </ul>
+  </nav>
+</header>
+<article>
+  <div class="leftbox">
+    <div class="infos">
+      <div class="newsview">
+        <h3 class="news_title" th:text="${art.articleTitle}" ></h3>
+          <div class="news_about">
+            <div class="news_author">
+              <span class="lm f_2">
+              <a href="/jstt/css3/" title="css3" target="_blank"  class="classname" th:text="${art.categoryName}">css3</a>
+            </span>
+              <span class="au01" th:text="${art.userName}"></span>
+              <span class="au02" th:text="${#dates.format(art.articleTime,'yyyy-MM-dd')}">2018-03-20</span>
+            </div>
+          </div>
+        <div class="news_infos" th:utext="${art.articleContent}">
+        </div>
+      </div>
+    </div>
+    <div class="nextinfo">
+      <p><a href='/index'>返回列表</a></a></p>
+    </div>
+
+  </div>
+  <div class="rightbox">
+    <div class="search">
+      <form action="/e/search/index.php" method="post" name="searchform" id="searchform">
+        <input name="keyboard" id="keyboard" class="input_text" value="请输入关键字" style="color: rgb(153, 153, 153);" onfocus="if(value=='请输入关键字'){this.style.color='#000';value=''}" onblur="if(value==''){this.style.color='#999';value='请输入关键字'}" type="text">
+        <input name="show" value="title" type="hidden">
+        <input name="tempid" value="1" type="hidden">
+        <input name="tbname" value="news" type="hidden">
+        <input name="Submit" class="input_submit" value="搜索" type="submit">
+      </form>
+    </div>
+
+    <div class="paihang">
+      <h2 class="ab_title">站长推荐</h2>
+      <ul>
+
+        <li th:each="article:${articleRecom}">
+          <h3 class="blogtitle"  >
+            <th:block th:if="${#strings.length(article.articleTitle)} > 10">
+              <a th:href="@{'/listView/'+${article.articleId}}" target="_blank" th:text="${#strings.substring(article.articleTitle,0,10)}"></a>...
+            </th:block>
+            <th:block th:if="${#strings.length(article.articleTitle)} <10">
+              <a th:text="${article.articleTitle}"  th:href="@{'/listView/'+${article.articleId}}" target="_blank"></a>
+            </th:block>
+          </h3>
+          <div class="bloginfo">
+            <th:block th:if="${#strings.length(article.articleContent)} > 50">
+              <p th:utext="${#strings.substring(article.articleContent,0,65)}"></p>...
+            </th:block>
+            <th:block th:if="${#strings.length(article.articleContent)} < 50">
+              <p th:utext="${article.articleContent}"></p>
+            </th:block>
+          </div>
+          <div class="autor">
+            <span class="lm f_l">
+              <a th:href="@{'/'+${article.categoryAlias}+'/'+${article.categoryId}}" title="css3" target="_blank"  class="classname" th:text="${article.categoryName}">css3</a>
+            </span>
+            <span class="dtime f_l" th:text="${#dates.format(article.articleTime,'yyyy-MM-dd')}">2018-03-25</span>
+          </div>
+        </li>
+      </ul>
+      <div class="ad"><img src="/front/picture/ad300x100.jpg"></div>
+    </div>
+
+  </div>
+</article>
+<footer>
+  <p>Design by wuzixuan<a href="http://www.XXX.com">个人博客</a> <a href="/">渝ICP备</a></p>
+</footer><script src="static/js/61a9ee23bfbe484da195456aea8b6f8b.js"></script></body>
+</html>
