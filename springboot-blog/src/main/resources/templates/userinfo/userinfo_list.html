@@ -22,8 +22,18 @@
             btn:['是','否'],
             icon:2
         },function () {
+            $.ajax({
+                url:'/back/user/delete',
+                type:'get',
+                data:{'id':id},
+                success:function (data) {
+                    layer.msg(data);
+                    setTimeout(function () {
+                        location.href='/back/user/list'
+                    },1000)
+                }
+            });
 
-            location.href="/back/user/delete/"+id
         });}
 
 </script>

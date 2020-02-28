@@ -287,9 +287,12 @@ FROM
       c.category_alias
     FROM article_info a
     LEFT JOIN category_info c
-    ON a.category_id = c.category_id) n
+    ON a.category_id = c.category_id
+
+
+    ) n
 LEFT JOIN user_info u
-on u.user_id= n.user_id
+on u.user_id= n.user_id ORDER BY article_time DESC
   </select>
 
   <select id="findAllArticlePageListByCondition" resultMap="BaseResultMap">
@@ -306,8 +309,28 @@ on u.user_id= n.user_id
     ON a.category_id = c.category_id
     and a.article_title like #{_articleTitle}) n
     LEFT JOIN user_info u
-    on u.user_id= n.user_id
+    on u.user_id= n.user_id ORDER BY article_time DESC
   </select>
+
+  <select id="findPersonalArticleByCondition" resultMap="BaseResultMap">
+  SELECT
+    a.*,
+    c.category_name,
+    c.category_alias
+    FROM article_info a
+    inner JOIN category_info c
+    ON a.category_id = c.category_id
+    <if test="userId != null" >
+      and a.user_id = #{userId}
+    </if>
+    <if test="articleTitle != null" >
+      <bind name="_articleTitle" value="'%'+articleTitle+'%'"/>
+      and a.article_title like #{_articleTitle}
+    </if>
+
+  </select>
+
+
 
   <select id="findNewArticle" resultMap="BaseResultMap">
   SELECT n.*,
@@ -397,19 +420,53 @@ on u.user_id= n.user_id
   </select>
 
   <select id="searchArticle" resultMap="BaseResultMap">
-SELECT n.*,
-       u.user_name
-FROM
-(SELECT
+    <bind name="_articleTitle" value="'%'+name+'%'"/>
+    SELECT n.*,
+    u.user_name
+    FROM
+    (SELECT
     a.*,
     c.category_name,
     c.category_alias
     FROM article_info a
     inner JOIN category_info c
     ON a.category_id = c.category_id
-    and a.article_title LIKE '%p%'
-) n
+    and a.article_title LIKE #{_articleTitle}
+    ) n
+    LEFT JOIN user_info u
+    on u.user_id= n.user_id
+  </select>
+
+  <insert id="collectArticles">
+    INSERT INTO collections (user_id,article_id) VALUES(#{userId},#{articleId})
+  </insert>
+
+  <select id="findUserCollections" resultType="java.lang.Integer">
+    select count(*) from collections where user_id = #{userId} and article_id = #{id}
+  </select>
+
+  <delete id="cancelCollection">
+    DELETE FROM collections where user_id = #{userId} and article_id = #{id}
+  </delete>
+
+  <select id="findAllMyCollectionsArticlePageListByUserId" resultMap="BaseResultMap">
+    SELECT d.* FROM
+
+(SELECT n.*,
+       u.user_name
+FROM
+(SELECT
+      a.*,
+      c.category_name,
+      c.category_alias
+    FROM article_info a
+    LEFT JOIN category_info c
+    ON a.category_id = c.category_id
+
+
+    ) n
 LEFT JOIN user_info u
-on u.user_id= n.user_id
+on u.user_id= n.user_id)
+d INNER JOIN (SELECT article_id FROM collections WHERE user_id=#{userId}) b where d.article_id = b.article_id
   </select>
 </mapper>

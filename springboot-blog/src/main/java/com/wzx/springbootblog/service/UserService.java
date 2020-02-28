@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.wzx.springbootblog.domain.UserInfo;
 import com.wzx.springbootblog.utils.PageBean;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -57,4 +58,13 @@ public interface UserService extends UserDetailsService {
      * @param id
      */
     void deleteUser(Integer id);
+
+    UserInfo findUserByName(String name);
+
+    /**
+     * 头像上传
+     * @param file
+     * @return
+     */
+    public String doPutFile(MultipartFile file);
 }

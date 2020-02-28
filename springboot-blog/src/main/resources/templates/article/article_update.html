@@ -14,7 +14,21 @@
   <script src="/admin/js/jquery-2.1.4.min.js"></script>
   <script src="/admin/js/jquery.form.js"></script>
   <script src="/ckeditor/ckeditor.js"></script>
+  <script th:src="@{/layer/layer.js}"></script>
 </head>
+<script>
+  function submit() {
+    var options = {
+      url: '/back/article/update',
+      type: 'post',
+      success: function (data) {
+        layer.msg(data)
+      }
+    }
+    $("#f1").ajaxSubmit(options);
+  }
+
+</script>
 
 <body class="user-select" style="margin: 0px;padding: 0px;">
 <div>
@@ -69,12 +83,14 @@
       <div class="add-article-box">
         <h2 class="add-article-box-title"><span>提交修改</span></h2>
         <div class="add-article-box-content">
-          <p><label>站长推荐：</label><input type="radio" th:name="articleRecom" th:value="1" th:checked="${article.getArticleRecom()=='1'}"/>是 <input type="radio" th:name="articleRecom" th:value="0" th:checked="${article.getArticleRecom()=='0'}"/>否</p>
-          <p><label>是否发布：</label><input type="radio" th:name="articleMark" th:value="1" th:checked="${article.getArticleMark()=='1'}"/>是 <input type="radio" th:name="articleMark" th:value="0" th:checked="${article.getArticleMark()=='0'}"/>否</p>
+          <th:block th:if="${role}=='admin'">
+            <p><label>站长推荐：</label><input type="radio" th:name="articleRecom" th:value="1" th:checked="${article.getArticleRecom()=='1'}"/>是 <input type="radio" th:name="articleRecom" th:value="0" th:checked="${article.getArticleRecom()=='0'}"/>否</p>
+            <p><label>是否通过：</label><input type="radio" th:name="articleMark" th:value="1" th:checked="${article.getArticleMark()=='1'}"/>是 <input type="radio" th:name="articleMark" th:value="-1" th:checked="${article.getArticleMark()=='-1'}"/>否</p>
+          </th:block>
           <p><label>当前时间：</label><label id="timeShow" class="time1"></label></p>
         </div>
         <div class="add-article-box-footer">
-          <button class="btn btn-primary" type="submit" name="submit">发布</button>
+          <a class="btn btn-primary"  name="submit" onclick="submit()">发布</a>
         </div>
       </div>
     </div>

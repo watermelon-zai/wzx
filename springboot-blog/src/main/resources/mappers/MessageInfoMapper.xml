@@ -7,6 +7,15 @@
     <result column="message_time" property="messageTime" jdbcType="TIMESTAMP" />
     <result column="message_name" property="messageName" jdbcType="VARCHAR" />
     <result column="message_mark" property="messageMark" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="article_id" property="articleId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_img" property="userImg" jdbcType="VARCHAR" />
+    <result column="article_title" property="articleTitle" jdbcType="VARCHAR" />
+    <result column="reply_id" property="replyId" jdbcType="INTEGER" />
+    <result column="reply_user_id" property="replyUserId" jdbcType="INTEGER" />
+    <result column="reply_content" property="replyContent" jdbcType="VARCHAR" />
+    <result column="reply_time" property="replyTime" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -67,7 +76,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    message_id, message_content, message_time, message_name, message_mark
+    message_id, message_content, message_time, message_name, message_mark,user_id,article_id
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wzx.springbootblog.domain.MessageInfoExample" >
     select
@@ -79,9 +88,10 @@
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
-    <if test="orderByClause != null" >
+    <!--<if test="orderByClause != null" >
       order by ${orderByClause}
-    </if>
+    </if>-->
+    order by message_time desc
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -123,6 +133,12 @@
       <if test="messageMark != null" >
         message_mark,
       </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="articleId != null" >
+        article_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="messageId != null" >
@@ -139,6 +155,12 @@
       </if>
       <if test="messageMark != null" >
         #{messageMark,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="articleId != null" >
+        #{articleId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -216,4 +238,69 @@
   <update id="updateMessMarkNoshow">
     UPDATE message_info SET message_mark = '0' WHERE message_id = #{id}
   </update>
+
+  <!--查询我的文章下的评论-->
+  <select id="findMessage" resultMap="BaseResultMap">
+SELECT u.user_name,
+       u.user_img ,
+       c.*
+FROM user_info u
+INNER JOIN (SELECT
+                   m.*,
+                   a.article_title
+            FROM message_info m
+            INNER JOIN (SELECT
+                               article_id,
+                               article_title
+                        FROM article_info
+                        WHERE user_id = #{userId}) a
+            on a.article_id = m.article_id) c
+ON u.user_id = c.user_id
+  </select>
+
+  <!--查询我发布的留言-->
+  <select id="findMymessagelist" resultMap="BaseResultMap">
+    SELECT u.user_name,
+           b.article_id,
+           b.article_title,
+           b.message_id,
+           b.message_content,
+           b.message_time
+    FROM user_info u
+    INNER JOIN (SELECT a.article_title,
+                       a.user_id,
+                       m.message_id,
+                       m.message_content,
+                       m.message_time,
+                       m.article_id
+               FROM article_info a
+               INNER JOIN (SELECT article_id,
+                                  message_id,
+                                  message_content,
+                                  message_time
+                           FROM message_info
+                           WHERE user_id = #{userId}) m
+               on a.article_id = m.article_id) b
+    ON u.user_id = b.user_id ORDER BY message_time DESC
+  </select>
+
+ <!-- 删除留言-->
+  <delete id="deleteMessageByArtId">
+    delete from message_info where article_id = #{id}
+  </delete>
+
+  <!--查询文章下的所有评论-->
+  <select id="findArtMessage" resultMap="BaseResultMap">
+    SELECT
+      m.*,
+      u.user_name,
+      u.user_img
+FROM  user_info u
+INNER JOIN (SELECT
+                   *
+            FROM message_info
+            where article_id = #{articleId}) m
+ON u.user_id = m.user_id
+and m.message_mark =1
+  </select>
 </mapper>

@@ -6,12 +6,11 @@ import com.wzx.springbootblog.service.UserService;
 import com.wzx.springbootblog.utils.Const;
 import com.wzx.springbootblog.utils.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.jws.WebParam;
 import java.util.List;
@@ -36,6 +35,7 @@ public class UserInfoController {
 	 * @param page 
 	 * @return
 	 */
+	@PreAuthorize("hasAuthority('用户管理')")
 	@GetMapping("/list")
 	public String list(Model model, Integer page) {
 		if(page==null){
@@ -55,6 +55,7 @@ public class UserInfoController {
 	 * @param page
 	 * @return
 	 */
+	@PreAuthorize("hasAuthority('用户管理')")
 	@PostMapping("/list")
 	public String findUserByName(UserInfo user, Model model, Integer page) {
 		if(page==null){
@@ -137,9 +138,12 @@ public class UserInfoController {
 	 * @param id
 	 * @return
 	 */
-	@GetMapping("/delete/{id}")
-	public String deleteUser(@PathVariable Integer id){
+	@GetMapping("/delete")
+	@ResponseBody
+	public String deleteUser( Integer id){
 		this.userService.deleteUser(id);
-		return "redirect:/back/user/list";
+		return "删除成功~";
 	}
+
+
 }

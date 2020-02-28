@@ -69,8 +69,10 @@
             <div class="add-article-box">
               <h2 class="add-article-box-title"><span>发布</span></h2>
               <div class="add-article-box-content">
-              	<p><label>站长推荐：</label><input type="radio" th:name="articleRecom" th:value="1" checked/>是 <input type="radio" th:name="articleRecom" th:value="0" />否</p>
-                <p><label>是否发布：</label><input type="radio" th:name="articleMark" th:value="1" checked/>是 <input type="radio" th:name="articleMark" th:value="0" />否</p>
+                  <th:block th:if="${role}=='admin'">
+                      <p><label>站长推荐：</label><input type="radio" th:name="articleRecom" th:value="1" checked/>是 <input type="radio" th:name="articleRecom" th:value="0" />否</p>
+                      <p><label>是否通过：</label><input type="radio" th:name="articleMark" th:value="1" checked/>是 <input type="radio" th:name="articleMark" th:value="0" />否</p>
+                  </th:block>
                 <p><label>当前时间：</label><label id="timeShow" class="time1"></label></p>
               </div>
               <div class="add-article-box-footer">

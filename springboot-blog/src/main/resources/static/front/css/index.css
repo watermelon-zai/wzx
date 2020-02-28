@@ -2,7 +2,7 @@
 .leftbox { width: 70%; float: left; overflow: hidden }
 .sleftbox { width: 70%; float: left; overflow: hidden }
 .rightbox { width: 28%; float: right; overflow: hidden }
-.srightbox { width: 28%; float: right; overflow: hidden }
+.srightbox { width: 28%; float: right; overflow: hidden ;margin-top: 20px}
 /*图片展示*/
 .pics { margin: 10px 0; overflow: hidden }
 .pics ul li { width: 32%; height: 155px; float: left; margin: 10px auto; display: block; overflow: hidden; border-radius: 5px; position: relative; background: #dedede; }
@@ -183,4 +183,116 @@ h3.blogtitle { line-height: 30px; height: 30px; margin: 10px 0; }
     .tuijianmb li:nth-child(3n-2) { border-left: #ccc 1px solid; }
     .tuijianmb li:nth-child(2n+1) { border-left: 0 }
     .tuijianmb li:nth-child(2n) { border-right: 0; }
+}
+
+html, body {
+    position: relative;
+    height: 100%;
+}
+body {
+    background: #eee;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color:#000;
+    margin: 0;
+    padding: 0;
+}
+
+.swiper-container {
+    width: 45%;
+    height: 100%;
+    margin-top: -50px;
+    margin-left: -5%;
+
+
+}
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #333;
+    color: #fff;
+    padding-bottom: 20px;
+
+
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+@media (max-width: 760px) {
+    .swiper-button-next {
+        right: 20px;
+        transform: rotate(90deg);
+        margin-left: 300px;
+    }
+
+    .swiper-button-prev {
+        left: 20px;
+        transform: rotate(90deg);
+        margin-left: 300px;
+    }
+}
+.obj{
+    background: red;
+    width: 100%;
+    height: 100%;
+
+
+}
+.he{
+    width: 100%;
+    height: 50px;
+    background: #333;
+
+}
+.d1{
+    width: 7%;
+    height: 100%;
+    float: right;
+    text-align: center;
+    overflow: hidden;
+    line-height: 50px;
+    background: #333;
+    margin-right: 21.5%;
+    margin-top: -50px;
+
+}
+
+.d2{
+    width: 5%;
+    height: 100%;
+    overflow: hidden;
+    line-height: 50px;
+    float: right;
+    text-align: center;
+    margin-right: 17%;
+    background: #333;
+    margin-top: -50px;
+}
+.d4{
+    width: 5%;
+    height: 100%;
+    overflow: hidden;
+    line-height: 50px;
+    text-align: center;
+    margin-left: 21%;
+    background: #333;
+}
+
+.a1{
+    padding-top: 20px;
+    text-align: center;
+    font-size: 18px;
+    background: #333;
+    color: #fff;
 }

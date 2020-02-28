@@ -2,6 +2,7 @@ package com.wzx.springbootblog.config;
 
 import com.wzx.springbootblog.handler.ComstomAuthenticationFailureHandler;
 import com.wzx.springbootblog.handler.ComstomAuthenticationSuccessHandler;
+import com.wzx.springbootblog.handler.ConstomLogoutHandler;
 import com.wzx.springbootblog.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +43,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          */
         http.headers().frameOptions().disable();
 
+
     http.authorizeRequests()
-            .antMatchers("/back/main","/index","/front/message","/listView/**","/java/**","/web/**","/spring/**","/php/**","/html/**","/javascript/**","/python/**","/search").permitAll()
+            .antMatchers("/back/main","/index","/front/message","/listView/**","/search","/cate/**","/collection","/iscollectioned","/articlemessage","/back/login","/back/regist").permitAll()
             .antMatchers("/**").hasAnyRole("ADMIN","USER")
             .anyRequest().authenticated()
             .and()
@@ -56,7 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .logout()
             .logoutUrl("/logout")
-            .logoutSuccessUrl("/back/login")
+            .logoutSuccessHandler(new ConstomLogoutHandler())
+            .deleteCookies("JSESSIONID")
             .invalidateHttpSession(true)
             .permitAll()
             .and()

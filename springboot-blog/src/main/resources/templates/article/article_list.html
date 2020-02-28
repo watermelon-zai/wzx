@@ -12,37 +12,55 @@
 <link rel="apple-touch-icon-precomposed" href="/admin/images/icon/icon.png">
 <link rel="shortcut icon" href="/admin/images/icon/favicon.ico">
 <script src="/admin/js/jquery-2.1.4.min.js"></script>
+    <script src="/admin/js/jquery.form.js"></script>
     <script th:src="@{/layer/layer.js}"></script>
 </head>
-<script th:inline="javascript">
+<script>
     function ff(id) {
 
         layer.confirm('确定要删除吗？',{
             btn:['是','否'],
             icon:2
         },function () {
-            location.href="/back/article/delete/"+id
+            $.ajax({
+                url:'/back/article/delete',
+                type:'get',
+                data:{'id':id},
+                success:function (data) {
+                    layer.msg(data);
+                    setTimeout(function () {
+                        location.href='/back/article/list'
+                    },1000)
+                }
+            });
         });
 
 
     }
 
-    function fm() {
+    function f_delete() {
 
         //获取所有已经选中的name属性为ids的input标签
         var cks=$("input[name=ids]:checked");
 
         if(cks.length<1){
-            alert("请选择要删除的用户");
-            return;
+            layer.msg("请选择要删除的文章")
+        }else {
+            var options = {
+                url:'/back/article/deleteList',
+                type:'post',
+                success:function (data) {
+                        layer.msg(data)
+                    setTimeout(function () {
+                        location.href='/back/article/list'
+                    },1000)
+                }
+            }
+            $("#f1").ajaxSubmit(options);
         }
-        //confirm(arg) 点击确定时返回true,点击取消返回false
-        if(confirm("确认要删除吗？")){
-            //修改form表单的action属性
-            $("#f1").prop("action","/back/article/deleteList");
-            //jquery提交form表单
-            $("#f1").submit();
-        }
+
+
+
 
     }
 </script>
@@ -74,6 +92,7 @@
                   <th>作者</th>
                 <th>栏目</th>
                 <th>日期</th>
+                  <th>状态</th>
                 <th>操作</th>
               </tr>
             </thead>
@@ -87,12 +106,24 @@
                           <a th:text="${article.articleTitle}"  th:href="@{'/listView/'+${article.articleId}}" target="_blank"></a>
                       </th:block>
                   </td>
-                  <td th:text="${article.userName}">这个是栏目</td>
-                <td th:text="${article.categoryName}">这个是栏目</td>
+                  <td th:text="${article.userName}">作者</td>
+                <td th:text="${article.categoryName}">栏目</td>
                 <td th:text="${#dates.format(article.articleTime,'yyyy-MM-dd')}">2015-12-03</td>
+
+                  <th:block th:if="${article.articleMark}==1">
+                      <td>审核通过</td>
+                  </th:block>
+                  <th:block th:if="${article.articleMark}==0">
+                      <td>未审核</td>
+                  </th:block>
+                  <th:block th:if="${article.articleMark}==-1">
+                      <td>审核未通过</td>
+                  </th:block>
+
                 <td>
-                    <a th:href="@{'/back/article/loadupdate/'+${article.articleId}}" th:text="修改"></a>
+                    <a th:href="@{'/back/article/loadupdate/'+${article.articleId}}" th:text="审核"></a>
                     <a th:text="删除" th:href="'javascrit:void(0)'" th:onclick="'ff('+${article.articleId}+')'"></a>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -103,7 +134,7 @@
             <div class="btn-toolbar operation" role="toolbar" id="aa">
               <div class="btn-group" role="group"> <a class="btn btn-default" onClick="select()">全选</a> <a class="btn btn-default" onClick="reverse()">反选</a> <a class="btn btn-default" onClick="noselect()">不选</a> </div>
               <div class="btn-group" role="group">
-                <button type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="删除全部选中" name="checkbox_delete" id="del" onclick="fm()">删除</button>
+                <a class="btn btn-default" id="del" onclick="f_delete()">删除</a>
               </div>
             </div>
               <div class="message_footer">

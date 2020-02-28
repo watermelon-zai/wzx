@@ -2,6 +2,8 @@ package com.wzx.springbootblog.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
 import com.wzx.springbootblog.domain.*;
 import com.wzx.springbootblog.mapper.RoleMapper;
 import com.wzx.springbootblog.mapper.UserInfoMapper;
@@ -18,12 +20,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserInfoMapper userInfoMapper;
@@ -43,8 +51,14 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public int addUser(UserInfo userInfo) {
-        int i=this.userInfoMapper.insertSelective(userInfo);
-         return i;
+       try{
+           int i=this.userInfoMapper.insertSelective(userInfo);
+           return i;
+       }catch(Exception e){
+        e.printStackTrace();
+           TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+       }
+       return 0;
     }
 
 
@@ -124,6 +138,20 @@ public class UserServiceImpl implements UserService {
         this.userInfoMapper.updateByPrimaryKey(userInfo);
     }
 
+    @Override
+    public UserInfo findUserByName(String name) {
+        UserInfoExample userInfoExample = new UserInfoExample();
+        UserInfoExample.Criteria criteria = userInfoExample.createCriteria();
+        criteria.andUserNameEqualTo(name);
+        List<UserInfo> list = this.userInfoMapper.selectByExample(userInfoExample);
+        if (CollectionUtils.isNotEmpty(list)){
+            return list.get(0);
+        }else {
+            return null;
+        }
+
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String userAccount) throws UsernameNotFoundException {
@@ -142,7 +170,7 @@ public class UserServiceImpl implements UserService {
          * @return
          * @throws UsernameNotFoundException
          */
-        System.out.println(userAccount);
+            //System.out.println(userAccount);
             UserDetails userDetails = null;
             List<String> roleNameList = new ArrayList<>();
             List<GrantedAuthority> grantedAuthorityList = new ArrayList<>(0);
@@ -188,7 +216,7 @@ public class UserServiceImpl implements UserService {
                 if (CollectionUtils.isNotEmpty(permissionList)){
                     for (Permission permission:permissionList) {
                         String permisiionName = permission.getPermissionName();
-                        System.out.println(permisiionName);
+                       /* System.out.println(permisiionName);*/
                         SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(permisiionName);
                         grantedAuthorityList.add(grantedAuthority);
                     }
@@ -210,5 +238,41 @@ public class UserServiceImpl implements UserService {
             return userDetails;
 
         }
+
+
+    /**
+     * 上传图片
+     * @param file
+     * @return
+     */
+    @Override
+    public String doPutFile(MultipartFile file) {
+        try {
+            //图片名称
+            String fileName = file.getOriginalFilename();
+            //当前时间
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            String format = sdf.format(new Date());
+
+            //拼接url
+            String url = Const.USERIMG_URL+format+fileName;
+            System.out.println(url);
+
+            //jersey客户端
+            Client client = new Client();
+            WebResource resource = client.resource(url);
+
+            //将文件转为byte
+            byte[] buf = file.getBytes();
+            resource.put(String.class,buf);
+            return url;
+
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+        return null;
+    }
+
 
 }

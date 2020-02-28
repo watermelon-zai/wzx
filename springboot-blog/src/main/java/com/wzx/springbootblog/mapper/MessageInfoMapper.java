@@ -32,4 +32,12 @@ public interface MessageInfoMapper {
     boolean updateMessMark(Integer id);
 
     void updateMessMarkNoshow(Integer id);
+
+    List<MessageInfo> findMessage(Integer userId);
+
+    List<MessageInfo> findMymessagelist(Integer userId);
+
+    void deleteMessageByArtId(Integer id);
+
+    List<MessageInfo> findArtMessage(Integer articleId);
 }

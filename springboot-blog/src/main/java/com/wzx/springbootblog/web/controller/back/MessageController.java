@@ -10,6 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 留言管理的控制器
  * @author Administrator
@@ -72,17 +75,18 @@ public class MessageController {
 	 * @return
 	 */
 	@PostMapping("deleteList")
+	@ResponseBody
 	public String deleteList(MessageInfo messageInfo) {
-		String[] ids = messageInfo.getIds();
+		List<Integer> ids = Arrays.asList(messageInfo.getIds());
 		boolean b = false;
-		for (String id:ids) {
-			int i = Integer.parseInt(id);
-			 b = this.messageService.deleteMessge(i);
+		for (Integer id:ids) {
+
+			 b = this.messageService.deleteMessge(id);
 		}
 		if (b)
-			return "redirect:/back/message/list";
+			return "删除成功~";
 		else
-			return "redirect:/back/message/list";
+			return "删除失败~";
 	}
 
 	/**
@@ -93,7 +97,7 @@ public class MessageController {
 	@ResponseBody
 	public String show(Integer id) {
         this.messageService.updateMassMarkShow(id);
-		return "修改成功，可以在前台显示啦~~";
+		return "修改成功，可以在文章下显示啦~~";
 	}
 
 	/**
@@ -104,7 +108,7 @@ public class MessageController {
 	@ResponseBody
 	public String noshow(Integer id) {
 		this.messageService.updateMassMarkNoshow(id);
-		return "修改成功，不会再前台显示了~~";
+		return "修改成功，不会再文章下显示了~~";
 	}
 
 

@@ -1,6 +1,7 @@
 package com.wzx.springbootblog.service;
 
 import com.github.pagehelper.PageInfo;
+import com.sun.beans.editors.BooleanEditor;
 import com.wzx.springbootblog.domain.ArticleInfo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -92,4 +93,45 @@ public interface ArticleService {
      * @return
      */
     PageInfo<ArticleInfo> searchArticle(String name,Integer pageNum,Integer pageSize);
+
+    /**
+     * 根据用户查询该用户的所有文章
+     * @param userId
+     * @return
+     */
+    PageInfo<ArticleInfo> findPersonalArticleByCondition(Integer pageNum,Integer pageSize,ArticleInfo articleInfo);
+
+
+    /**
+     * 收藏文章 将用户id和文章id插入收藏表
+     * @param userId
+     * @param articleId
+     * @return
+     */
+    boolean collectAritcles(Integer userId, Integer articleId);
+
+    /**
+     * 根据用户编号和文章编号查询 收藏记录，
+     * @param userId
+     * @param id
+     * @return
+     */
+    Integer findUserCollections(Integer userId, Integer id);
+
+    /**
+     * 取消收藏文章
+     * @param userId
+     * @param id
+     * @return
+     */
+    Boolean  cancelCollection(Integer userId, Integer id);
+
+    /**
+     * 根据用户编号查询所有该用户收藏的文章
+     * @param pageNum
+     * @param pageSize
+     * @param userId
+     * @return
+     */
+    PageInfo<ArticleInfo> findAllMyCollectionsArticlePageListByUserId(Integer pageNum,Integer pageSize, Integer userId);
 }

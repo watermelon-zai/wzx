@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wzx.springbootblog.mapper.ReplyMapper" >
+  <resultMap id="BaseResultMap" type="com.wzx.springbootblog.domain.Reply" >
+    <id column="reply_id" property="replyId" jdbcType="INTEGER" />
+    <result column="reply_content" property="replyContent" jdbcType="VARCHAR" />
+    <result column="reply_time" property="replyTime" jdbcType="TIMESTAMP" />
+    <result column="reply_user_id" property="replyUserId" jdbcType="INTEGER" />
+    <result column="reply_message_id" property="replyMessageId" jdbcType="INTEGER" />
+  </resultMap>
+
+  <insert id="insertReplyMessage">
+   INSERT INTO reply(reply_content,reply_user_id,reply_message_id) VALUES (#{replyContent},#{userId},#{messageId});
+  </insert>
+</mapper>

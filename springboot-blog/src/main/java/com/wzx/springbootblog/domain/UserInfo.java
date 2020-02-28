@@ -13,6 +13,36 @@ public class UserInfo {
 
     private String userMark;
 
+    private String userImg;
+
+    private String userEmail;
+
+    private String userSex;
+
+    public String getUserSex() {
+        return userSex;
+    }
+
+    public void setUserSex(String userSex) {
+        this.userSex = userSex;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getUserImg() {
+        return userImg;
+    }
+
+    public void setUserImg(String userImg) {
+        this.userImg = userImg;
+    }
+
     public Integer getUserId() {
         return userId;
     }

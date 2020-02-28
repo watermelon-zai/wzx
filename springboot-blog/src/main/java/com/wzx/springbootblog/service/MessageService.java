@@ -19,4 +19,10 @@ public interface MessageService {
     void updateMassMarkNoshow(Integer id);
 
     PageInfo<MessageInfo> findAllMessagePageListByShow(Integer pageNum, int pageSize);
+
+    PageInfo<MessageInfo> findMessage(Integer pageNum, int pageSize,Integer userId);
+
+    PageInfo<MessageInfo> findMymessagelist(Integer pageNum, int pageSize,Integer userId);
+
+    PageInfo<MessageInfo> findArtMessage(Integer pageNum, int pageSize,Integer articleId);
 }

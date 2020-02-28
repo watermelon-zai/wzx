@@ -44,4 +44,14 @@ public interface ArticleInfoMapper {
     List<ArticleInfo> findArticleRecomListByCateId(Integer id);
 
     List<ArticleInfo> searchArticle(String name);
+
+    List<ArticleInfo> findPersonalArticleByCondition(ArticleInfo articleInfo);
+
+    boolean collectArticles(Integer userId, Integer articleId);
+
+    Integer findUserCollections(Integer userId, Integer id);
+
+    void cancelCollection(Integer userId, Integer id);
+
+    List<ArticleInfo> findAllMyCollectionsArticlePageListByUserId(Integer userId);
 }

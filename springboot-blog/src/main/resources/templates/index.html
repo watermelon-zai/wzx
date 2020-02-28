@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8">
 <meta name="renderer" content="webkit">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>博客管理系统</title>
+<title>后台管理</title>
 <link rel="stylesheet" type="text/css" href="/admin/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="/admin/css/style.css">
 <link rel="stylesheet" type="text/css" href="/admin/css/font-awesome.min.css">
@@ -20,12 +20,12 @@
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"> <span class="sr-only">切换导航</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-          <a class="navbar-brand" href="/">博客后台</a> </div>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" > <span class="sr-only">切换导航</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+          <a class="navbar-brand" href="/">后台管理</a> </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
           
-            <li class="dropdown"> <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">admin <span class="caret"></span></a>
+            <li class="dropdown"> <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" th:text="'管理员：'+${username}"> <span class="caret"></span></a>
               <ul class="dropdown-menu dropdown-menu-left">
                 <li><a title="查看或修改个人信息" data-toggle="modal" data-target="#seeUserInfo">个人信息</a></li>
               </ul>
@@ -48,7 +48,7 @@
         <li><a href="/back/article/list" target="mainframe">文章管理</a></li>
         <li><a href="/back/message/list" target="mainframe">留言管理</a></li>
         <li><a href="/back/user/list?page=1" target="mainframe">用户管理</a></li>
-        <li><a href="/back/login" >退出</a></li>
+        <li><a href="/logout" >退出</a></li>
       </ul>
     </aside>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-lg-10 col-md-offset-2 main"  id="main" style="margin-top: 0px;padding-top: 0px;padding-bottom: 0px;margin-bottom: 0px;">
@@ -82,19 +82,19 @@
             <tbody>
               <tr>
                 <td wdith="20%">姓名:</td>
-                <td width="80%"><input type="text" value="王雨" class="form-control" name="truename" maxlength="10" autocomplete="off" /></td>
+                <td width="80%"><input type="text" th:value="${userinfo.getUserName()}" class="form-control" name="truename" maxlength="10" autocomplete="off" /></td>
               </tr>
               <tr>
-                <td wdith="20%">用户名:</td>
-                <td width="80%"><input type="text" value="admin" class="form-control" name="username" maxlength="10" autocomplete="off" /></td>
+                <td wdith="20%">账号:</td>
+                <td width="80%"><input type="text" th:value="${userinfo.getUserAccount()}" class="form-control" name="username" maxlength="10" autocomplete="off" /></td>
               </tr>
               <tr>
                 <td wdith="20%">电话:</td>
-                <td width="80%"><input type="text" value="18538078281" class="form-control" name="usertel" maxlength="13" autocomplete="off" /></td>
+                <td width="80%"><input type="text" th:value="${userinfo.getUserPhone()}" class="form-control" name="usertel" maxlength="13" autocomplete="off" /></td>
               </tr>
               <tr>
                 <td wdith="20%">旧密码:</td>
-                <td width="80%"><input type="password" class="form-control" name="old_password" maxlength="18" autocomplete="off" /></td>
+                <td width="80%"><input type="password" th:value="${userinfo.getUserPassword()}" class="form-control" name="old_password" maxlength="18" autocomplete="off" /></td>
               </tr>
               <tr>
                 <td wdith="20%">新密码:</td>

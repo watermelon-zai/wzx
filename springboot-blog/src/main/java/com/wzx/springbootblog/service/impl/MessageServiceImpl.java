@@ -132,4 +132,53 @@ public class MessageServiceImpl implements MessageService {
         PageInfo pageInfo = new PageInfo(messageInfoList);
         return pageInfo;
     }
+
+    /**
+     * 查询我的文章下的评论
+     * @param pageNum
+     * @param pageSize
+     * @param userId
+     * @return
+     */
+    @Override
+    public PageInfo<MessageInfo> findMessage(Integer pageNum, int pageSize,Integer userId) {
+        try{
+            PageHelper.startPage(pageNum,pageSize);
+            List<MessageInfo> messageInfoList = this.messageInfoMapper.findMessage(userId);
+            PageInfo pageInfo = new PageInfo(messageInfoList);
+            return pageInfo;
+        }catch(Exception e){
+         e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public PageInfo<MessageInfo> findMymessagelist(Integer pageNum, int pageSize,Integer userId) {
+        try{
+            PageHelper.startPage(pageNum,pageSize);
+            List<MessageInfo> messageInfoList = this.messageInfoMapper.findMymessagelist(userId);
+            PageInfo pageInfo = new PageInfo(messageInfoList);
+            return pageInfo;
+        }catch(Exception e){
+         e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public PageInfo<MessageInfo> findArtMessage(Integer pageNum, int pageSize,Integer articleId) {
+        try{
+            PageHelper.startPage(pageNum,pageSize);
+            List<MessageInfo> messageInfoList = this.messageInfoMapper.findArtMessage(articleId);
+            PageInfo pageInfo = new PageInfo(messageInfoList);
+            return pageInfo;
+        }catch(Exception e){
+         e.printStackTrace();
+        }
+        return null;
+    }
+
+
 }

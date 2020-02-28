@@ -1,0 +1,49 @@
+<!doctype html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>学无止境</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="/admin/css/bootstrap.min.css">
+<link href="/front/css/base.css" rel="stylesheet">
+<link href="/front/css/index.css" rel="stylesheet">
+  <script src="/admin/js/jquery-2.1.4.min.js"></script>
+  <link rel="stylesheet" href="/front/css/swiper.min.css">
+  <script src="/front/js/swiper.min.js"></script>
+  <script th:src="@{/layer/layer.js}"></script>
+</head>
+<body>
+
+<article>
+  <script>
+    layer.msg('这里啥都没有┓( ´∀` )┏', {icon: 5});
+  </script>
+
+</article>
+
+</body>
+<script>
+  var swiper = new Swiper('.swiper-container', {
+    slidesPerView: 5,
+    direction: getDirection(),
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    on: {
+      resize: function () {
+        swiper.changeDirection(getDirection());
+      }
+    }
+  });
+
+  function getDirection() {
+    var windowWidth = window.innerWidth;
+    var direction = window.innerWidth <= 760 ? 'vertical' : 'horizontal';
+
+    return direction;
+  }
+</script>
+</html>
+
+

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="/admin/js/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" href="/front/css/swiper.min.css">
+    <script src="/front/js/swiper.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/admin/css/bootstrap.min.css">
+    <link href="/front/css/base.css" rel="stylesheet">
+    <link href="/front/css/index.css" rel="stylesheet">
+    <script src="/admin/js/bootstrap.min.js"></script>
+    <script th:src="@{/layer/layer.js}"></script>
+</head>
+<script>
+
+
+    function deleteMessage(articleId) {
+        layer.confirm('确定要删除吗？',{
+            btn:['是','否'],
+            icon:2
+        },function () {
+            $.ajax({
+                url:'/back/message/delete',
+                type:'get',
+                data:{'id':articleId},
+                success:function (data) {
+                    layer.msg(data);
+                    setTimeout(function () {
+                        location.href='/myMessageToxxx'
+                    },1000)
+                }
+            });
+        });
+
+    }
+</script>
+<style>
+    .d1{
+        width: 5%;
+        height: 100%;
+        float: right;
+        text-align: center;
+        overflow: hidden;
+        line-height: 50px;
+        background: #333;
+        margin-right: 25%;
+        margin-top: -50px;
+
+    }
+
+    .d2{
+        width: 5%;
+        height: 100%;
+        overflow: hidden;
+        line-height: 50px;
+        float: right;
+        text-align: center;
+        margin-right: 20%;
+        background: #333;
+        margin-top: -50px;
+    }
+    .d4{
+        width: 5%;
+        height: 100%;
+        overflow: hidden;
+        line-height: 50px;
+        text-align: center;
+        margin-left: 20%;
+        background: #333;
+    }
+</style>
+<body>
+
+<ul class="nav nav-tabs" >
+    <!-- <li role="presentation" class="active"><a href="#home" role="tab" data-toggle="tab">我的文章评论</a></li>
+     <li role="presentation"><a href="#profile" role="tab" data-toggle="tab">待我审核的评论</a></li>
+     <li role="presentation"><a href="#messages" role="tab" data-toggle="tab">我发表的评论</a></li>-->
+    <li role="presentation"><a href="/myArticleMessage" >我的文章评论</a></li>
+    <li role="presentation" style="background-color: #bce8f1"><a href="/myMessageToxxx" >我发表的评论</a></li>
+</ul>
+
+
+
+    <!--我发表的评论-->
+    <div role="tabpanel" class="tab-pane" id="messages">
+        <div class="hr-line-dashed">
+            <th:block th:each="message:${pageBean2.list}">
+                <blockquote>
+
+                    <p th:text="'我  '+${#dates.format(message.messageTime,'yyyy-MM-dd HH:mm:ss')}+'   评论了'" style="margin-left: 0px;"></p>
+                    <p th:text="${message.userName}+'  的文章 '" style="margin-left:25%;margin-top: -33px"/>
+
+                    <th:block th:if="${#strings.length(message.articleTitle)} > 10">
+                        <div style="float: left;margin-left:38%;margin-top: -33px">
+                            <a th:text="${#strings.substring(message.articleTitle,0,10)}" th:href="@{'/listView/'+${message.articleId}}" target="_blank"></a>
+                        </div>
+                    </th:block>
+                    <th:block th:if="${#strings.length(message.articleTitle)} <10">
+                        <div style="float: left;margin-left:38%;margin-top: -33px">
+                            <a th:text="${message.articleTitle}" th:href="@{'/listView/'+${message.articleId}}" target="_blank"></a>
+                        </div>
+                    </th:block>
+                    <div style="float: right;margin-right:5%;">
+                        <span class="glyphicon glyphicon-trash" th:onclick="'deleteMessage('+${message.messageId}+')'"  style="cursor: pointer" id="delet"/>
+                    </div>
+
+
+                    <span class="glyphicon glyphicon-comment" th:text="'  '+${message.messageContent}" />
+
+                </blockquote>
+                <h4 class="hometitle" ></h4>
+            </th:block>
+        </div>
+        <div class="message_footer">
+            <ul class="pager" id="page">
+                <span>&emsp14;&emsp14;&emsp14;</span>
+                <th:block th:if="${pageBean2.getPageNum()} == 1">
+                    第一页  上一页
+                </th:block>
+                <li th:if="${pageBean2.getPageNum()} > 1">
+                    <a th:href="@{'/myMessageToxxx#?page=1'}">第一页</a>
+                </li >
+                <li th:if="${pageBean2.getPageNum()} > 1">
+                    <a th:href="@{'/myMessageToxxx?page='+${pageBean2.getPageNum()-1}}">上一页</a>
+                </li>
+                <th:block th:if="${pageBean2.getPageNum()} == ${pageBean2.pages}">
+                    下一页  最末页
+                </th:block>
+                <li th:if="${pageBean2.getPageNum()} != ${pageBean2.pages}">
+                    <a th:href="@{'/myMessageToxxx?page='+${pageBean2.getPageNum()+1}}">下一页</a>
+                </li>
+                <li th:if="${pageBean2.getPageNum()} != ${pageBean2.pages}">
+                    <a th:href="@{'/myMessageToxxx?page='+${pageBean2.pages}}">最末页</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+</body>
+</html>

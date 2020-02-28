@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>个人中心</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Link Swiper's CSS -->
+  <link rel="stylesheet" href="/front/css/swiper.min.css">
+  <script src="/front/js/swiper.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/admin/css/bootstrap.min.css">
+  <link href="/front/css/base.css" rel="stylesheet">
+  <link href="/front/css/index.css" rel="stylesheet">
+    <script src="/admin/js/jquery-2.1.4.min.js"></script>
+    <script th:src="@{/layer/layer.js}"></script>
+    <script src="/admin/js/jquery.form.js"></script>
+    <script src="/admin/js/bootstrap.min.js"></script>
+    <script src="/admin/js/jquery.cookie.js"></script>
+  <!-- Demo styles -->
+  <style>
+
+    .swiper-container {
+      width: 45%;
+      height: 100%;
+        margin-top: -50px;
+        margin-left: 25%;
+
+
+    }
+    .swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      background: #333;
+      color: #fff;
+
+
+
+      /* Center slide text vertically */
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      -webkit-justify-content: center;
+      justify-content: center;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+    }
+
+    @media (max-width: 760px) {
+      .swiper-button-next {
+        right: 20px;
+        transform: rotate(90deg);
+        margin-left: 100px;
+      }
+
+      .swiper-button-prev {
+        left: 20px;
+        transform: rotate(90deg);
+        margin-left: 100px;
+      }
+    }
+    .obj{
+      background: red;
+      width: 100%;
+      height: 100%;
+
+
+    }
+.he{
+  width: 100%;
+  height: 50px;
+  background: #333;
+
+}
+    .d1{
+      width: 5%;
+      height: 100%;
+      float: right;
+      text-align: center;
+      overflow: hidden;
+      line-height: 50px;
+      background: #333;
+      margin-right: 25%;
+      margin-top: -50px;
+
+    }
+
+    .d2{
+      width: 5%;
+      height: 100%;
+      overflow: hidden;
+      line-height: 50px;
+      float: right;
+      text-align: center;
+      margin-right: 20%;
+      background: #333;
+      margin-top: -50px;
+    }
+    .d4{
+      width: 5%;
+      height: 100%;
+      overflow: hidden;
+      line-height: 50px;
+      text-align: center;
+      margin-left: 20%;
+      background: #333;
+    }
+
+    div a{
+      padding-top: 20px;
+      text-align: center;
+      color: #fff;
+      font-size: 18px;
+    }
+
+        .aside{
+            width: 20%;
+            height: 40%;
+            background: burlywood;
+            margin-left: 4%;
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+      .main{
+          margin-top: -260px;
+          float: right;
+          width: 70%;
+          background: #bce8f1;
+          margin-right: 5%;
+          border-radius: 10px;
+
+      }
+
+
+  </style>
+<script>
+
+  if( $.cookie('url').length!=4){
+
+      location.href=$.cookie('url')
+  }
+
+
+</script>
+</head>
+
+<body>
+<header>
+
+    <div class="he">
+        <div class="d4"><a href="/index"  class="a1">网站首页</a></div>
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" th:each="cate:${cateList}">
+                    <a th:href="@{'/cate/'+${cate.categoryId}}" th:text="${cate.categoryName}" class="a1"></a>
+                </div>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+        <div class="d1"><a href="/personal"  class="a1">个人中心</a></div>
+        <div class="d2"> <a href="/front/message"  class="a1">留言</a></div>
+    </div>
+</header>
+<div class="d5">
+    <aside class="aside">
+        <ul class="nav nav-sidebar">
+            <li><a href="/personalInfo" target="mainframe">个人信息</a></li>
+        </ul>
+        <ul class="nav nav-sidebar">
+            <li><a href="/myCollections" target="mainframe">我的收藏</a></li>
+            <li><a href="/personalArticle" target="mainframe">我的文章</a></li>
+            <li><a href="/back/article/loadAdd" target="mainframe">发布文章</a></li>
+            <li><a href="/myArticleMessage" target="mainframe">评论管理</a></li>
+            <li><a href="/logout" >退出</a></li>
+        </ul>
+    </aside>
+    <div class="main"  id="main">
+        <iframe  id="mainframe"  name="mainframe" src="/personalInfo" style="overflow-y: hidden;width: 100%;border: 0px;margin: 0px;padding: 0px;"></iframe>
+        <script type="text/javascript">
+            var height = jQuery(window).height() - 50;
+            jQuery("#mainframe").attr("height", "" + height + "px;");
+            jQuery("aside ul li").click(function(){
+                jQuery("aside ul li").removeClass("active");
+                $(this).addClass("active");
+            });
+
+        </script>
+    </div>
+</div>
+
+
+  <!-- Initialize Swiper -->
+  <script>
+    var swiper = new Swiper('.swiper-container', {
+      slidesPerView: 5,
+      direction: getDirection(),
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      on: {
+        resize: function () {
+          swiper.changeDirection(getDirection());
+        }
+      }
+    });
+
+    function getDirection() {
+      var windowWidth = window.innerWidth;
+      var direction = window.innerWidth <= 760 ? 'vertical' : 'horizontal';
+
+      return direction;
+    }
+
+
+
+  </script>
+</body>
+<script src="/admin/js/bootstrap.min.js"></script>
+<script src="/admin/js/admin-scripts.js"></script>
+</html>

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文章 - 博客管理系统</title>
+<link rel="stylesheet" type="text/css" href="/admin/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="/admin/css/style.css">
+<link rel="stylesheet" type="text/css" href="/admin/css/font-awesome.min.css">
+<link rel="apple-touch-icon-precomposed" href="/admin/images/icon/icon.png">
+<link rel="shortcut icon" href="/admin/images/icon/favicon.ico">
+<script src="/admin/js/jquery-2.1.4.min.js"></script>
+    <script th:src="@{/layer/layer.js}"></script>
+</head>
+<script th:inline="javascript">
+    function ff(id) {
+
+         layer.confirm('确定要删除吗？',{
+            btn:['是','否'],
+            icon:2
+        },function () {
+            $.ajax({
+                url:'/back/article/delete',
+                type:'get',
+                data:{'id':id},
+                success:function (data) {
+                    layer.msg(data);
+                    setTimeout(function () {
+                        location.href='/personalArticle'
+                    },1000)
+                }
+            });
+        });
+
+    }
+
+    function f_delete() {
+
+        //获取所有已经选中的name属性为ids的input标签
+        var cks = $("input[name=ids]:checked");
+
+        if (cks.length < 1) {
+            layer.msg("请选择要删除的文章")
+        } else {
+            var options = {
+                url: '/back/article/deleteList',
+                type: 'post',
+                success: function (data) {
+                    layer.msg(data)
+                    setTimeout(function () {
+                        location.href = '/personalArticle'
+                    }, 1000)
+                }
+            }
+            $("#f1").ajaxSubmit(options);
+        }
+
+    }
+</script>
+<body class="user-select" style="margin: 0px;padding: 0px;">
+
+      <form action="/personalArticle" method="post" class="form-inline" id="f1">
+      	<div>
+      		<ul class="breadcrumb" style="margin: 0px;">
+      			<li>文章管理</li>
+      			<li>文章查询</li>
+      		</ul>
+      	</div>
+   		<div class="row alert alert-info">
+   				<div class="form-group">
+   					<input type="text" th:name="articleTitle" class="form-control" placeholder="请输入文章的标题"/>
+   					<input type="submit" value="查询" class="btn btn-info "/>
+   					<a href="/back/article/loadAdd" class="btn btn-info ">增加文章</a>
+   				
+   				</div>
+   		</div>
+   
+     
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th>选择</th>
+                <th>标题</th>
+                <th>栏目</th>
+                <th>发布日期</th>
+                  <th>审核状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="article:${pageBean.list}">
+                <td th:utext="${article.ck}"><input type="checkbox" class="input-control" name="checkbox[]" value="" /></td>
+                  <td><th:block th:if="${#strings.length(article.articleTitle)} > 10">
+                      <a th:href="@{'/listView/'+${article.articleId}}" target="_blank" th:text="${#strings.substring(article.articleTitle,0,10)}"></a>...
+                  </th:block>
+                      <th:block th:if="${#strings.length(article.articleTitle)} <10">
+                          <a th:text="${article.articleTitle}"  th:href="@{'/listView/'+${article.articleId}}" target="_blank"></a>
+                      </th:block>
+                  </td>
+                <td th:text="${article.categoryName}">这个是栏目</td>
+                <td th:text="${#dates.format(article.articleTime,'yyyy-MM-dd')}">2015-12-03</td>
+                  <th:block th:if="${article.articleMark}==1">
+                      <td>审核通过</td>
+                  </th:block>
+                  <th:block th:if="${article.articleMark}==0">
+                      <td>未审核</td>
+                  </th:block>
+                  <th:block th:if="${article.articleMark}==-1">
+                      <td>审核未通过</td>
+                  </th:block>
+
+                <td>
+                    <a th:href="@{'/back/article/loadupdate/'+${article.articleId}}" th:text="修改"></a>
+                    <a th:text="删除" th:href="'javascrit:void(0)'" th:onclick="'ff('+${article.articleId}+')'"></a>
+              </tr>
+            </tbody>
+          </table>
+            共有<span th:text="${	pageBean.getTotal()}"/>条记录，当前是第<span th:text="${pageBean.getPageNum()}"/> 页
+        </div>
+        <footer class="message_footer">
+          <nav>
+            <div class="btn-toolbar operation" role="toolbar" id="aa">
+              <div class="btn-group" role="group"> <a class="btn btn-default" onClick="select()">全选</a> <a class="btn btn-default" onClick="reverse()">反选</a> <a class="btn btn-default" onClick="noselect()">不选</a> </div>
+              <div class="btn-group" role="group">
+                  <a class="btn btn-default" id="del" onclick="f_delete()">删除</a>
+              </div>
+            </div>
+              <div class="message_footer">
+                  <ul class="pager" id="page">
+
+                      <span>&emsp14;&emsp14;&emsp14;</span>
+                      <th:block th:if="${pageBean.getPageNum()} == 1">
+                       第一页  上一页
+                      </th:block>
+                      <li th:if="${pageBean.getPageNum()} > 1">
+                          <a th:href="@{'/back/article/list?page=1'}">第一页</a>
+                      </li >
+                      <li th:if="${pageBean.getPageNum()} > 1">
+                          <a th:href="@{'/back/article/list?page='+${pageBean.getPageNum()-1}}">上一页</a>
+                      </li>
+                      <th:block th:if="${pageBean.getPageNum()} == ${pageBean.pages}">
+                          下一页  最末页
+                      </th:block>
+                      <li th:if="${pageBean.getPageNum()} != ${pageBean.pages}">
+                          <a th:href="@{'/back/article/list?page='+${pageBean.getPageNum()+1}}">下一页</a>
+                      </li>
+                      <li th:if="${pageBean.getPageNum()} != ${pageBean.pages}">
+                          <a th:href="@{'/back/article/list?page='+${pageBean.pages}}">最末页</a>
+                      </li>
+                  </ul>
+              </div>
+
+          </nav>
+        </footer>
+      </form>
+<script src="/admin/js/bootstrap.min.js"></script> 
+<script src="/admin/js/admin-scripts.js"></script>
+
+</body>
+</html>

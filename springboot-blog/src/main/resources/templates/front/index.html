@@ -7,29 +7,37 @@
   <link rel="stylesheet" type="text/css" href="/admin/css/bootstrap.min.css">
 <link href="/front/css/base.css" rel="stylesheet">
 <link href="/front/css/index.css" rel="stylesheet">
+  <link rel="stylesheet" href="/front/css/swiper.min.css">
+  <script src="/front/js/swiper.min.js"></script>
   <script src="/admin/js/jquery-2.1.4.min.js"></script>
+
   <script th:src="@{/layer/layer.js}"></script>
 </head>
-<script th:inline="javascript">
-  function ff()
-  {
 
-    document.getElementById(ss).style.backgroundColor="red"
-    document.getElementById(ss).style.color="red"
-  }
-</script>
 <body>
-
 <header>
-  <nav>
-    <ul>
-      <li class="obj"><a href="/index">网站首页</a></li>
-      <li th:each="cate:${cateList}" class="obj" >
-        <a th:href="@{'/'+${cate.categoryAlias}+'/'+${cate.categoryId}}" th:text="${cate.categoryName}"></a>
-      </li>
-      <li class="obj"><a href="/front/message" onclick="f1()">留言</a></li>
-    </ul>
-  </nav>
+  <div class="he">
+    <div class="d4"><a href="/index" class="a1">网站首页</a></div>
+    <div class="swiper-container">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide" th:each="cate:${cateList}">
+          <a th:href="@{'/cate/'+${cate.categoryId}}" th:text="${cate.categoryName}" class="a1"></a>
+        </div>
+      </div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+    </div>
+    <th:block th:if="${user==null}">
+      <div class="d1"><a href="/personal" onclick="f1()" class="a1">登录/注册</a></div>
+    </th:block>
+    <th:block th:if="${user!=null}">
+      <div class="d1">
+        <a href="/personal" onclick="f1()" class="a1"><img th:src="${user.userImg}" width="50" height="50" class="img-circle" style="margin-left: 15px"></a>
+      </div>
+    </th:block>
+    <div class="d2"> <a href="/front/message" class="a1">留言</a></div>
+
+  </div>
 </header>
 <article>
   <div class="pics">
@@ -39,6 +47,7 @@
       <li><img src="/front/picture/13ec5c876bf437fd7e9e6b12b565a69c.jpg"></li>
     </ul>
   </div>
+  <!--</div>-->
   <div class="sleftbox">
     <div class="newblogs">
       <h2 class="hometitle">最新文章</h2>
@@ -47,16 +56,18 @@
         <li th:each="article:${newArticle}">
           <h3 class="blogtitle">
             <th:block th:if="${#strings.length(article.articleTitle)} > 30">
-              <a th:href="@{'/listView/'+${article.articleId}}" target="_blank" th:text="${#strings.substring(article.articleTitle,0,30)}"></a>...
+              <!--打开一个新页面
+              <a th:onclick="'BackToPrevious('+${article.articleId}+')'" target="_blank" th:text="${#strings.substring(article.articleTitle,0,30)}"></a>...-->
+              <a th:href="@{'/listView/'+${article.articleId}}"  th:text="${#strings.substring(article.articleTitle,0,30)}" style="cursor: pointer" ></a>...
             </th:block>
             <th:block th:if="${#strings.length(article.articleTitle)} <30">
-              <a th:text="${article.articleTitle}"  th:href="@{'/listView/'+${article.articleId}}" target="_blank"></a>
+              <a th:text="${article.articleTitle}"  th:href="@{'/listView/'+${article.articleId}}" style="cursor: pointer" ></a>
             </th:block>
           </h3>
           <div class="bloginfo">
             <span class="blogpic">
-              <a th:href="@{'/listView/'+${article.articleId}}" title="别让这些闹心的套路，毁了你的网页设计">
-                <img th:src="${article.articleImg}" alt="别让这些闹心的套路，毁了你的网页设计" />
+              <a th:href="@{'/listView/'+${article.articleId}}" >
+                <img th:src="${article.articleImg}"/>
               </a>
             </span>
             <th:block th:if="${#strings.length(article.articleContent)} > 130">
@@ -69,12 +80,13 @@
           </div>
           <div class="autor">
             <span class="lm f_l">
-              <a th:href="@{'/'+${article.categoryAlias}+'/'+${article.categoryId}}" title="css3" target="_blank"  class="classname" th:text="${article.categoryName}">css3</a>
+              <a th:href="@{'/cate/'+${article.categoryId}}" title="css3" target="_blank"  class="classname" th:text="${article.categoryName}">css3</a>
             </span>
             <span class="dtime f_l" th:text="${#dates.format(article.articleTime,'yyyy-MM-dd')}">时间</span>
             <span class="au01" th:text="${article.userName}">作者</span>
             <span class="f_r">
               <a th:href="@{'/listView/'+${article.articleId}}" class="more">阅读原文>></a>
+             <!-- <a th:onclick="'BackToPrevious('+${article.articleId}+')'" class="more" style="cursor: pointer" target="_blank" th:href="'javascrit:void(0)'">阅读原文>></a>-->
             </span>
           </div>
         </li>
@@ -92,8 +104,8 @@
     </div>
     <div class="search">
       <form action="/search" method="post" name="searchform" id="searchform">
-        <input name="name" id="keyboard" class="input_text" value="请输入关键字" style="color: rgb(153, 153, 153);" onfocus="if(value=='请输入关键字'){this.style.color='#000';value=''}" onblur="if(value==''){this.style.color='#999';value='请输入关键字'}" type="text">
-        <input name="Submit" class="input_submit" value="搜索" type="submit">
+        <input type="text" id="userName" name="name" class="form-control" placeholder="请输入关键字" required autofocus autocomplete="off" maxlength="10" style="width: 75%">
+        <input name="Submit" class="input_submit" value="搜索" type="submit" id="signinSubmit" style="float: right;margin-top: -30px">
       </form>
     </div>
     <div class="paihang">
@@ -103,10 +115,10 @@
         <li th:each="article:${articleRecom}">
           <h3 class="blogtitle"  >
             <th:block th:if="${#strings.length(article.articleTitle)} > 10">
-              <a th:href="@{'/listView/'+${article.articleId}}" target="_blank" th:text="${#strings.substring(article.articleTitle,0,10)}"></a>...
+              <a  th:href="@{'/listView/'+${article.articleId}}" th:text="${#strings.substring(article.articleTitle,0,10)}" style="cursor: pointer" ></a>...
             </th:block>
             <th:block th:if="${#strings.length(article.articleTitle)} <10">
-              <a th:text="${article.articleTitle}"  th:href="@{'/listView/'+${article.articleId}}" target="_blank"></a>
+              <a th:text="${article.articleTitle}" th:href="@{'/listView/'+${article.articleId}}"  style="cursor: pointer" ></a>
             </th:block>
           </h3>
           <div class="bloginfo">
@@ -119,7 +131,7 @@
           </div>
           <div class="autor">
             <span class="lm f_l">
-              <a th:href="@{'/'+${article.categoryAlias}+'/'+${article.categoryId}}" title="css3" target="_blank"  class="classname" th:text="${article.categoryName}">css3</a>
+              <a th:href="@{'/cate/'+${article.categoryId}}" title="css3" target="_blank"  class="classname" th:text="${article.categoryName}">css3</a>
             </span>
             <span class="au01" th:text="${article.userName}">作者</span>
             <span class="dtime f_l" th:text="${#dates.format(article.articleTime,'yyyy-MM-dd')}">2018-03-25</span>
@@ -132,8 +144,46 @@
 
   </div>
 </article>
+
 <footer>
-  <p>Design by wuzixuan<a href="http://www.XXX.com">个人博客</a> <a href="/">渝ICP备</a></p>
+
 </footer>
 </body>
+<script>
+  var swiper = new Swiper('.swiper-container', {
+    slidesPerView: 5,
+    direction: getDirection(),
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    on: {
+      resize: function () {
+        swiper.changeDirection(getDirection());
+      }
+    }
+  });
+
+  function getDirection() {
+    var windowWidth = window.innerWidth;
+    var direction = window.innerWidth <= 760 ? 'vertical' : 'horizontal';
+
+    return direction;
+  }
+
+
+
+  $('#signinSubmit').click(function(){
+    if($('#keyboard').val() === ''){
+      $(this).text('用户名不能为空');
+    }else{
+      $(this).text('请稍后...');
+    }
+  });
+
+
+
+</script>
+
+<script src="/admin/js/bootstrap.min.js"></script>
 </html>

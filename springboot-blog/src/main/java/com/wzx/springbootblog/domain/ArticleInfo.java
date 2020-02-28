@@ -124,7 +124,7 @@ public class ArticleInfo {
     }
 
     private String ck;
-    private String []ids;
+    private Integer[]ids;
     public String getCk() {
         ck="<input type='checkbox' name='ids' value=' "+this.getArticleId()+"'/>";
         return ck;
@@ -133,11 +133,11 @@ public class ArticleInfo {
         this.ck = ck;
     }
 
-    public String[] getIds() {
+    public Integer[] getIds() {
         return ids;
     }
 
-    public void setIds(String[] ids) {
+    public void setIds(Integer[] ids) {
         this.ids = ids;
     }
 }
